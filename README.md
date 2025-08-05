@@ -8,31 +8,34 @@
 
 ## Overview
 
-macOS Sentinel v5.0 is a comprehensive, self‑updating, and production‑hardened Zsh toolkit designed for modern macOS administration on Apple Silicon (M1, M2, M3, M4+). It bundles common troubleshooting tasks, system maintenance, software management, enterprise integration (Intune), diagnostics, and irreversible "Danger Zone" operations into a single, interactive CLI menu.
+macOS Sentinel v5.0 is a comprehensive, self‑updating, production‑hardened Zsh toolkit for modern macOS administration on Apple Silicon (M1, M2, M3, M4+) and Intel. It consolidates troubleshooting tasks, system maintenance, software management, enterprise integration (Intune), diagnostics, and irreversible "Danger Zone" operations into a unified, interactive CLI menu.
 
-Key features:
+### Key Features
 
-- **Interactive Menu:** Color‑coded sections for Quick Fixes, Maintenance, Software & Enterprise, Diagnostics & Info, and a separate Danger Zone.
-- **Audit Logging:** All actions (successes and failures) are logged with timestamps in `~/Library/Logs/macOS_Sentinel.log` using atomic file locking.
-- **Self‑Update:** Automatically fetches and applies updates from a configured GitHub raw URL.
-- **Dependency Checks:** Validates required binaries on startup (e.g. `curl`, `networksetup`, `profiles`, `flock`).
-- **Troubleshooting & Maintenance:** Wi‑Fi and Bluetooth resets, periodic scripts, DNS flush, Spotlight rebuild, cache clearing, and permissions repair.
-- **Software Management:** Install or update apps via Homebrew Cask.
+- **Interactive Menu:** Color‑coded sections for Quick Fixes, Maintenance, Software & Enterprise, Diagnostics & Info, and a dedicated Danger Zone.
+- **Audit Logging:** Timestamped logs of every action (successes and errors) at `~/Library/Logs/macOS_Sentinel.log` with atomic file locking.
+- **Self‑Update:** In-place script updates from a configurable GitHub raw URL.
+- **Dependency Checks:** Verifies essential binaries (`curl`, `networksetup`, `profiles`, `flock`, etc.) at startup.
+- **Troubleshooting & Maintenance:** Wi‑Fi/Bluetooth resets, periodic scripts, DNS flush, Spotlight rebuild, cache clearing, permissions repair.
+- **Software Management:** Install and update applications via Homebrew Cask.
 - **Enterprise Integration:** Launch Microsoft Intune Company Portal and generate compliance reports.
-- **Diagnostics:** Generate a detailed system report, explain SMC/NVRAM reset procedures.
+- **Diagnostics:** Generate detailed system reports and display Apple Silicon SMC/NVRAM reset guidance.
 - **Danger Zone:** Unenroll from Intune, remove MDM profiles, and guide factory reset with strong confirmations.
 
 ---
 
 ## Prerequisites
 
-- **macOS** on Apple Silicon (M1/M2/M3/M4+) or Intel (most functions supported).
-- **Zsh** (default shell on modern macOS).
-- **Git** (to clone the repository).
-- **Homebrew** (optional, for software installation/update).
-- **Microsoft Intune Company Portal** (optional, for enterprise commands).
+- **macOS** (Apple Silicon or Intel) with Zsh as the shell.
+- **Git** (to clone the repo).
+- **Homebrew** (optional, for software install/update).
+- **Microsoft Intune Company Portal** (optional, for enterprise tasks).
 
-Ensure the following commands are available in your `PATH`: `curl`, `profiles`, `osascript`, `diskutil`, `networksetup`, `pkill`, `pgrep`, `sudo`, `mktemp`, `awk`, `head`, `flock`.
+Ensure the following commands exist in your `PATH`:
+
+```
+curl profiles osascript diskutil networksetup pkill pgrep sudo mktemp awk head flock
+```
 
 ---
 
@@ -41,37 +44,36 @@ Ensure the following commands are available in your `PATH`: `curl`, `profiles`, 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/youruser/macOS-Sentinel.git
+   git clone https://github.com/Blindsinner/macOS-Sentinel.git
    cd macOS-Sentinel
    ```
 
 2. **Make the script executable**
 
    ```bash
-   chmod +x sentinel.sh
+   chmod +x macOS-Sentinel.sh
    ```
 
-3. **(Optional) Configure overrides**
+3. **(Optional) Create a configuration file**
 
-   - Create `~/.sentinelrc` to override `SCRIPT_URL`, `SCRIPT_VERSION`, or `LOG_FILE`.
-   - Example `.sentinelrc`:
+   - To override settings, create `~/.sentinelrc` and define variables:
      ```bash
-     # Sentinel config
-     SCRIPT_URL="https://raw.githubusercontent.com/youruser/macOS-Sentinel/main/sentinel.sh"
+     # ~/.sentinelrc example
+     SCRIPT_URL="https://raw.githubusercontent.com/Blindsinner/macOS-Sentinel/main/macOS-Sentinel.sh"
      LOG_FILE="$HOME/Library/Logs/MySentinel.log"
      ```
 
 4. **Run Sentinel**
 
    ```bash
-   ./sentinel.sh
+   ./macOS-Sentinel.sh
    ```
 
 ---
 
 ## Usage
 
-Upon launch, Sentinel presents a multi‑section menu. Navigate by typing the number (or letter) and pressing **Enter**:
+Upon launch, Sentinel presents a menu. Enter the number or letter and press **Enter**:
 
 ```
 macOS Sentinel v5.0
@@ -93,73 +95,72 @@ macOS Sentinel v5.0
  Q) Quit
 ```
 
-### Menu Actions
+### Sections & Actions
 
-#### Quick Fixes & Maintenance
+**Quick Fixes & Maintenance**
 
-- **1. Fix Wi‑Fi**: Toggles Wi‑Fi power off/on on the detected interface.
-- **2. Fix Bluetooth**: Restarts the `bluetoothd` daemon.
-- **3. Run Maintenance**: Executes `periodic daily weekly monthly`, flushes DNS, and reindexes Spotlight.
-- **4. Clear Caches**: Closes visible apps, clears user and system caches, and recommends a reboot.
-- **5. Repair Permissions**: Resets user‑home permissions via `diskutil resetUserPermissions`.
+- **1. Fix Wi‑Fi:** Toggle Wi‑Fi off/on.
+- **2. Fix Bluetooth:** Restart Bluetooth daemon.
+- **3. Run Maintenance:** Run daily/weekly/monthly scripts, flush DNS, reindex Spotlight.
+- **4. Clear Caches:** Close apps, clear user/system caches, prompt for reboot.
+- **5. Repair Permissions:** Reset home-folder permissions.
 
-#### Software & Enterprise
+**Software & Enterprise**
 
-- **6. Install Apps**: Install one or more Homebrew Cask apps by entering their slugs.
-- **7. Update All Apps**: Runs `brew update && brew upgrade`.
-- **8. Open Company Portal**: Launches Microsoft Intune Company Portal for enrollment or compliance.
+- **6. Install Apps:** Install Homebrew Cask apps by slug (e.g. `google-chrome`).
+- **7. Update All Apps:** `brew update && brew upgrade`.
+- **8. Open Company Portal:** Launch Intune for enrollment/compliance.
 
-#### Diagnostics & Info
+**Diagnostics & Info**
 
-- **9. Generate Report**: Creates a timestamped system report on the Desktop (hardware, software, disk usage, top processes, Intune status).
-- **10. Explain SMC/NVRAM**: Displays Apple Silicon reset guidance.
-- **11. Check for Updates**: Checks and applies script updates from the configured `SCRIPT_URL`.
+- **9. Generate Report:** Create a timestamped system report on Desktop.
+- **10. Explain SMC/NVRAM:** Show Apple Silicon reset guidance.
+- **11. Check for Updates:** Self‑update the script from GitHub.
 
-#### Danger Zone
+**Danger Zone**
 
-- **D. Danger Zone**: Opens a sub‑menu for destructive actions:
-  - **1) Unenroll from Intune**: Guides you through Company Portal unenrollment.
-  - **2) Delete MDM Profiles**: Removes all configuration profiles.
-  - **3) Factory Reset Mac**: Opens System Settings for "Erase All Content and Settings" (confirmation required).
+- **D. Danger Zone:** Opens sub-menu for destructive operations:
+  - **1) Unenroll from Intune**
+  - **2) Delete MDM Profiles**
+  - **3) Factory Reset Mac**
 
 ---
 
 ## Logging & Audit
 
-All actions are logged to:
+Sentinel logs every action to:
 
 ```
 ~/Library/Logs/macOS_Sentinel.log
 ```
 
-Logs include timestamps, task names, and success/error statuses. File locking ensures no corruption if multiple instances run.
+Logs include timestamps, actions, and outcomes. File locking via `flock` prevents corruption.
 
 ---
 
-## Self‑Update
+## Self‑Update Mechanism
 
-When selecting **"Check for Updates"**, Sentinel fetches the latest version from `SCRIPT_URL`:
+- Fetches latest script from `SCRIPT_URL`.
+- Compares against the running script.
+- Prompts to overwrite and relaunch if an update is available.
 
-- Download to a temp file.
-- Byte‑compare with the running script.
-- If different, prompt to overwrite and relaunch.
-
-Configure the update source via `SCRIPT_URL` in `~/.sentinelrc` if needed.
+Override `SCRIPT_URL` in `~/.sentinelrc` as needed.
 
 ---
 
 ## Best Practices
 
-- **Run with sudo** only when prompted. Sentinel uses `sudo` for privileged operations.
-- **Review logs** after mass operations (caches, profiles) for any errors.
-- **Customize** by editing `~/.sentinelrc`—override URLs, log paths, or even add new menu functions.
-- **Backup** your data and test destructive Danger Zone actions on a non‑production machine first.
+- Use **sudo** only when prompted.
+- Review logs after major tasks.
+- Customize via `~/.sentinelrc` for organization-specific defaults.
+- Test Danger Zone actions on non-production devices first.
 
 ---
 
-## Contribution & Support
+## Contributing
 
-PRs, issues, and feature requests welcome on [GitHub](https://github.com/youruser/macOS-Sentinel). Please adhere to coding style and include tests where applicable.
+Contributions, issues, and feature requests are welcome!\
+Please open them on [GitHub](https://github.com/Blindsinner/macOS-Sentinel).
 
 ---
 
