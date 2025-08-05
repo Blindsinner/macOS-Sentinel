@@ -1,27 +1,3 @@
-#!/bin/zsh
-
-# ==============================================================================
-# macOS Sentinel - README Script
-# ==============================================================================
-#
-# This script contains the official README documentation for the macOS Sentinel
-# project. When executed, it will display the formatted documentation in the
-# terminal.
-#
-# This is useful for including documentation directly within a project
-# repository or for providing a quick help reference.
-#
-# Usage:
-#   chmod +x README.sh
-#   ./README.sh
-#
-
-# The main function that prints the documentation using a 'here document'.
-# The 'EOF' marker can be any string, and quoting it ('EOF') prevents
-# parameter expansion and command substitution within the here-document,
-# preserving the text exactly as written.
-display_readme() {
-cat << 'EOF'
 # macOS Sentinel v6.1
 
 **Author:** MD FAYSAL MAHMUD
@@ -127,8 +103,3 @@ This special section contains irreversible actions and requires extra confirmati
 Contributions are welcome! Please feel free to open an issue or submit a pull request on the project's GitHub repository.
 
 © 2025 MD FAYSAL MAHMUD
-EOF
-}
-
-# Call the function to display the README content.
-display_readme
