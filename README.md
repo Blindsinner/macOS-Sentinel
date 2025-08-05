@@ -2,7 +2,7 @@
 
 **Author:** MD FAYSAL MAHMUD
 
-**Version:** 6.1 (Logo Refined)
+**Version:** 6.1
 
 **License:** MIT
 
